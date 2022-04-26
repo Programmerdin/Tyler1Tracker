@@ -1,0 +1,29 @@
+[
+    {
+      leagueId: '05fb99f4-e149-3133-a78e-821597582f9d',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'CHALLENGER',
+      rank: 'I',
+      summonerId: 'cVQAZ7zN3q6x5-CBTUkcbeSFRkhs0CFJjEqhrOtQZIJGMC0',
+      summonerName: 'Rascal',
+      leaguePoints: 911,
+      wins: 234,
+      losses: 190,
+      veteran: true,
+      inactive: false,
+      freshBlood: false,
+      hotStreak: false
+    },
+    {
+      queueType: 'RANKED_TFT_PAIRS',
+      summonerId: 'cVQAZ7zN3q6x5-CBTUkcbeSFRkhs0CFJjEqhrOtQZIJGMC0',
+      summonerName: 'Rascal',
+      leaguePoints: 0,
+      wins: 0,
+      losses: 21,
+      veteran: false,
+      inactive: false,
+      freshBlood: false,
+      hotStreak: false
+    }
+  ]

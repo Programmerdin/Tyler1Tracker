@@ -1,0 +1,340 @@
+/lol/spectator/v4/active-games/by-summoner/{encryptedSummonerId}
+https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/NqbpvP2k2w5KBjQgZ22ynIsOJlPWFFknTuTE6rtSqe3agu0?api_key=RGAPI-9e1b7504-cf6e-44d8-9ccf-77bb5faaa96a
+
+//there is no game
+{
+    "status": {
+        "message": "Data not found",
+        "status_code": 404
+    }
+}
+
+
+//game is on
+{
+    "gameId": 5876018566,
+    "mapId": 11,
+    "gameMode": "CLASSIC",
+    "gameType": "MATCHED_GAME",
+    "gameQueueConfigId": 420,
+    "participants": [
+        {
+            "teamId": 100,
+            "spell1Id": 4,
+            "spell2Id": 14,
+            "championId": 875,
+            "profileIconId": 29,
+            "summonerName": "upioghllb1",
+            "bot": false,
+            "summonerId": "2sHhDHgDO_moFBd81yATIEo3mkaCnFFmg0PJiSq44Ms-XH8K",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8351,
+                    8306,
+                    8316,
+                    8347,
+                    8473,
+                    8242,
+                    5005,
+                    5002,
+                    5002
+                ],
+                "perkStyle": 8300,
+                "perkSubStyle": 8400
+            }
+        },
+        {
+            "teamId": 100,
+            "spell1Id": 12,
+            "spell2Id": 4,
+            "championId": 134,
+            "profileIconId": 4030,
+            "summonerName": "트루 러버",
+            "bot": false,
+            "summonerId": "n20nHP4gRadGBRZeR_k_m5oJINbgFeiyVGGA3GEawW6PoYQ",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8214,
+                    8226,
+                    8233,
+                    8237,
+                    8345,
+                    8347,
+                    5005,
+                    5008,
+                    5003
+                ],
+                "perkStyle": 8200,
+                "perkSubStyle": 8300
+            }
+        },
+        {
+            "teamId": 100,
+            "spell1Id": 4,
+            "spell2Id": 7,
+            "championId": 222,
+            "profileIconId": 3587,
+            "summonerName": "Gen G Ruler",
+            "bot": false,
+            "summonerId": "NqbpvP2k2w5KBjQgZ22ynIsOJlPWFFknTuTE6rtSqe3agu0",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8008,
+                    8009,
+                    9103,
+                    8017,
+                    8233,
+                    8236,
+                    5005,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8000,
+                "perkSubStyle": 8200
+            }
+        },
+        {
+            "teamId": 100,
+            "spell1Id": 14,
+            "spell2Id": 12,
+            "championId": 84,
+            "profileIconId": 5271,
+            "summonerName": "ALqx972184346Q",
+            "bot": false,
+            "summonerId": "J5PEQ9VQ_5dDm4JAaBYJAtVw06xQRbsF6ln8c7U4BDiB_dOPeZgJLKLiqw",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8010,
+                    8009,
+                    9105,
+                    8299,
+                    8473,
+                    8242,
+                    5008,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8000,
+                "perkSubStyle": 8400
+            }
+        },
+        {
+            "teamId": 100,
+            "spell1Id": 11,
+            "spell2Id": 4,
+            "championId": 64,
+            "profileIconId": 4302,
+            "summonerName": "불청객2",
+            "bot": false,
+            "summonerId": "0tG-v2hsRIfKANaF366Qo5Qa7XBp0q5WTU08VTrxIx1g7CagMX1R61gKvg",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8010,
+                    9111,
+                    9105,
+                    8299,
+                    8304,
+                    8347,
+                    5005,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8000,
+                "perkSubStyle": 8300
+            }
+        },
+        {
+            "teamId": 200,
+            "spell1Id": 1,
+            "spell2Id": 4,
+            "championId": 360,
+            "profileIconId": 13,
+            "summonerName": "가오 띵띵",
+            "bot": false,
+            "summonerId": "3yLjlt2VV2ZFPPwLkR0DvZCy3j_rnkC1L5f9X3Mxej04tCE",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8010,
+                    9111,
+                    9103,
+                    8014,
+                    8139,
+                    8135,
+                    5005,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8000,
+                "perkSubStyle": 8100
+            }
+        },
+        {
+            "teamId": 200,
+            "spell1Id": 12,
+            "spell2Id": 4,
+            "championId": 103,
+            "profileIconId": 29,
+            "summonerName": "just a failure",
+            "bot": false,
+            "summonerId": "0ERHHVFdEqssTY7zEeD3Dh-gt4r1uN_RZOz_F94O4wvuYI9uxm9b1oaCjQ",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8112,
+                    8139,
+                    8138,
+                    8106,
+                    8347,
+                    8316,
+                    5005,
+                    5008,
+                    5003
+                ],
+                "perkStyle": 8100,
+                "perkSubStyle": 8300
+            }
+        },
+        {
+            "teamId": 200,
+            "spell1Id": 4,
+            "spell2Id": 14,
+            "championId": 111,
+            "profileIconId": 29,
+            "summonerName": "asdasasdasd",
+            "bot": false,
+            "summonerId": "KsHR7vMAv2wYi6JEDdoWWcwRX_CvmY0YH38vfD9xYZW4Cte4cO5oUpcDdQ",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8351,
+                    8306,
+                    8316,
+                    8352,
+                    8473,
+                    8463,
+                    5005,
+                    5002,
+                    5002
+                ],
+                "perkStyle": 8300,
+                "perkSubStyle": 8400
+            }
+        },
+        {
+            "teamId": 200,
+            "spell1Id": 12,
+            "spell2Id": 4,
+            "championId": 24,
+            "profileIconId": 4218,
+            "summonerName": "Unknown Surf",
+            "bot": false,
+            "summonerId": "Y-_eLJzEhuAq5Eq1FdYtiY-KWtaWmRMjGJAOWFsriiu0_qU",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8010,
+                    9111,
+                    9105,
+                    8299,
+                    8345,
+                    8352,
+                    5005,
+                    5008,
+                    5003
+                ],
+                "perkStyle": 8000,
+                "perkSubStyle": 8300
+            }
+        },
+        {
+            "teamId": 200,
+            "spell1Id": 11,
+            "spell2Id": 4,
+            "championId": 78,
+            "profileIconId": 5184,
+            "summonerName": "콩나물이좋아요",
+            "bot": false,
+            "summonerId": "t6wTlkd_Nt2G17IsjMDH5l7Y36TxLh-fJjehiDHgcl59bN8",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8230,
+                    8275,
+                    8234,
+                    8232,
+                    8306,
+                    8347,
+                    5005,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8200,
+                "perkSubStyle": 8300
+            }
+        }
+    ],
+    "observers": {
+        "encryptionKey": "MPrtfzVYbstlr8HhVz8i7MFzjAA9IqD6"
+    },
+    "platformId": "KR",
+    "bannedChampions": [
+        {
+            "championId": -1,
+            "teamId": 100,
+            "pickTurn": 1
+        },
+        {
+            "championId": 888,
+            "teamId": 100,
+            "pickTurn": 2
+        },
+        {
+            "championId": 421,
+            "teamId": 100,
+            "pickTurn": 3
+        },
+        {
+            "championId": 55,
+            "teamId": 100,
+            "pickTurn": 4
+        },
+        {
+            "championId": 238,
+            "teamId": 100,
+            "pickTurn": 5
+        },
+        {
+            "championId": 888,
+            "teamId": 200,
+            "pickTurn": 6
+        },
+        {
+            "championId": -1,
+            "teamId": 200,
+            "pickTurn": 7
+        },
+        {
+            "championId": 711,
+            "teamId": 200,
+            "pickTurn": 8
+        },
+        {
+            "championId": -1,
+            "teamId": 200,
+            "pickTurn": 9
+        },
+        {
+            "championId": 498,
+            "teamId": 200,
+            "pickTurn": 10
+        }
+    ],
+    "gameStartTime": 1650431875433,
+    "gameLength": 244
+}

@@ -1,0 +1,33 @@
+/lol/league/v4/entries/by-summoner/{encryptedSummonerId}
+[
+    {
+      leagueId: 'ed0031fc-a036-3dc3-8c77-ddec9afad4c5',
+      queueType: 'RANKED_FLEX_SR',
+      tier: 'GRANDMASTER',
+      rank: 'I',
+      summonerId: 'uiijRASQ-deXz4Ql2oX_xJC6Xzg3_ra23Z0QC9cT15Woc-M',
+      summonerName: 'Viet Anh',
+      leaguePoints: 157,
+      wins: 139,
+      losses: 125,
+      veteran: false,
+      inactive: false,
+      freshBlood: true,
+      hotStreak: false
+    },
+    {
+      leagueId: '704db707-7fce-46ad-a26a-a5b4f6776882',
+      queueType: 'RANKED_SOLO_5x5',
+      tier: 'DIAMOND',
+      rank: 'I',
+      summonerId: 'uiijRASQ-deXz4Ql2oX_xJC6Xzg3_ra23Z0QC9cT15Woc-M',
+      summonerName: 'Viet Anh',
+      leaguePoints: 56,
+      wins: 139,
+      losses: 123,
+      veteran: false,
+      inactive: false,
+      freshBlood: false,
+      hotStreak: false
+    }
+  ]

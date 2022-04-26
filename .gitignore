@@ -1,0 +1,10 @@
+node_modules/
+.DS_Store
+nodemon*.json
+.env
+.eslintcache
+base.js
+token.json
+GoogleService-Info.plist
+firebase.json
+.env*

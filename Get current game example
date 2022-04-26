@@ -1,0 +1,87 @@
+/lol/spectator/v4/active-games/by-summoner/{encryptedSummonerId}
+https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/NqbpvP2k2w5KBjQgZ22ynIsOJlPWFFknTuTE6rtSqe3agu0?api_key=RGAPI-9e1b7504-cf6e-44d8-9ccf-77bb5faaa96a
+
+//there is no game
+response code: 404
+{
+    "status": {
+        "message": "Data not found",
+        "status_code": 404
+    }
+}
+
+//game is on 
+response code: 200
+{
+    "gameId": 5876018566,
+    "gameQueueConfigId": 420, //queueId: 420 is ranked solo
+    "participants": [
+        {
+            "teamId": 100,
+            "championId": 875,
+            "summonerName": "upioghllb1",
+            "summonerId": "2sHhDHgDO_moFBd81yATIEo3mkaCnFFmg0PJiSq44Ms-XH8K",
+        },
+        {
+            "teamId": 100,
+            "championId": 134,
+            "summonerName": "트루 러버",
+            "summonerId": "n20nHP4gRadGBRZeR_k_m5oJINbgFeiyVGGA3GEawW6PoYQ",
+        },
+        {
+            "teamId": 100,
+            "championId": 222,
+            "summonerName": "Gen G Ruler",
+            "summonerId": "NqbpvP2k2w5KBjQgZ22ynIsOJlPWFFknTuTE6rtSqe3agu0",
+        },
+        {
+            "teamId": 100,
+            "championId": 84,
+            "summonerName": "ALqx972184346Q",
+            "summonerId": "J5PEQ9VQ_5dDm4JAaBYJAtVw06xQRbsF6ln8c7U4BDiB_dOPeZgJLKLiqw",
+        },
+        {
+            "teamId": 100,
+            "championId": 64,
+            "summonerName": "불청객2",
+            "summonerId": "0tG-v2hsRIfKANaF366Qo5Qa7XBp0q5WTU08VTrxIx1g7CagMX1R61gKvg",
+        },
+        {
+            "teamId": 200,
+            "championId": 360,
+            "summonerName": "가오 띵띵",
+            "summonerId": "3yLjlt2VV2ZFPPwLkR0DvZCy3j_rnkC1L5f9X3Mxej04tCE",
+        },
+        {
+            "teamId": 200,
+            "championId": 103,
+            "summonerName": "just a failure",
+            "summonerId": "0ERHHVFdEqssTY7zEeD3Dh-gt4r1uN_RZOz_F94O4wvuYI9uxm9b1oaCjQ",
+        },
+        {
+            "teamId": 200,
+            "championId": 111,
+            "summonerName": "asdasasdasd",
+            "summonerId": "KsHR7vMAv2wYi6JEDdoWWcwRX_CvmY0YH38vfD9xYZW4Cte4cO5oUpcDdQ",
+            
+        },
+        {
+            "teamId": 200,
+            "championId": 24,
+            "summonerName": "Unknown Surf",
+            "summonerId": "Y-_eLJzEhuAq5Eq1FdYtiY-KWtaWmRMjGJAOWFsriiu0_qU",
+        },
+        {
+            "teamId": 200,
+            "championId": 78,
+            "summonerName": "콩나물이좋아요",
+            "summonerId": "t6wTlkd_Nt2G17IsjMDH5l7Y36TxLh-fJjehiDHgcl59bN8",
+        }
+    ],
+    "observers": {
+        "encryptionKey": "MPrtfzVYbstlr8HhVz8i7MFzjAA9IqD6"
+    },
+    "platformId": "KR",
+    "gameStartTime": 1650431875433,
+    "gameLength": 244
+}
