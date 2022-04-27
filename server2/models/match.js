@@ -2,10 +2,16 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
 const matchSchema = new Schema({
+    mainPlayerSummonerId: {type: String},
     matchId: {type: String},
     gameStartTimestamp: {type: Number},
     gameDuration: {type: Number},
-    averageRank: {type: Number},//need to be computed and saved under this key every match, average rank excluding tyler
+    averageConvertedRank: {type: Number},//need to be computed and saved under this key every match, average rank excluding tyler
+    averageTier: {type: String},
+    averageRank: {type: String},
+    averageLP: {type: String},
+    challgengerLpRequirement: {type: Number},
+    grandmasterLpRequirement: {type: Number},
     gameNumber: {type: Number},// need to be commputed, 1st 2nd 3rd ...etc  ranked game of tyler
     participants: [
         {
