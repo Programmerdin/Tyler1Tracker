@@ -12,7 +12,6 @@ const app = express();
 app.use(cors());
 
 
-
 //connect to mongodb
 const dbURI = 'mongodb+srv://hong5250:970708Odin@matchdatatest.82g9o.mongodb.net/OdinH_Data?retryWrites=true&w=majority'
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology:true})
@@ -22,8 +21,6 @@ mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology:true})
             //console.log("server running on port 3000");
         }) //localhost:3000
     }).catch(err=>console.log(err));
-
-
 
 
 //Riot API Key
@@ -53,8 +50,6 @@ const PUUID_IN_USE = PUUID_Tyler1;
 const global_match_data = [];
 
 
-    
-
 
 //get PUUUID using SummonerName
 function getPUUIDbySummonerName(summoner_name){
@@ -64,7 +59,6 @@ function getPUUIDbySummonerName(summoner_name){
             return response.data.puuid
         }).catch(err=>err);
 }
-
 
 //get last ranked game's match id 
 //this will only need to be run everytime tyler1 finishes a game
@@ -77,7 +71,6 @@ function getLastMatchId(PUUID){
 }
 //getLastMatchId(PUUID_IN_USE);
 
- 
 //get all games 
 //this will only need to be run once when the server starts 
 let matchIdArray = [];
@@ -123,15 +116,241 @@ function getAllMatchId(PUUID){
         }).catch(err=>err);
 
 }
-//getAllMatchId(PUUID_IN_USE);
 
+
+let challengerLpReq = 500;
+let grandmasterLpReq = 200;
+async function getLpRequirement(){
+    let topRankList = [];
+
+    //get playerlist from challenger gm and master 
+    axios.get(PLATFORM_ROUTING_VALUE_KR+"/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5?api_key="+API_KEY)
+        .then((response)=>{
+            let challengerList = response.data.entries
+            topRankList = [...topRankList, ...challengerList]
+
+            axios.get(PLATFORM_ROUTING_VALUE_KR+"/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5?api_key="+API_KEY)
+                .then((response)=>{
+                    let grandmasterList = response.data.entries
+                    topRankList = [...topRankList, ...grandmasterList]
+
+                    axios.get(PLATFORM_ROUTING_VALUE_KR+"/lol/league/v4/masterleagues/by-queue/RANKED_SOLO_5x5?api_key="+API_KEY)
+                        .then(async(response)=>{
+                            let masterList = response.data.entries
+                            topRankList = [...topRankList, ...masterList]
+
+                            //sort topRankList in order of LP, highest LP is index0
+                            topRankList.sort((a,b)=>{
+                                if(a.leaguePoints>b.leaguePoints){
+                                    return -1
+                                }
+                                if(a.leaguePoints<b.leaguePoints){
+                                    return 1
+                                } return 0
+                            })
+                            
+                            //update LPreq for Challenger and GM
+                            if(topRankList[299].leaguePoints<500){
+                                //if 300th rank player's lp is less than 500, challengerLpReq should be 500
+                                challengerLpReq = 500
+                            } else {
+                                //if 300th rank player's lp is 500 or more, challengerLpReq should be updated to that player's current lp
+                                challengerLpReq = topRankList[299].leaguePoints
+                            }
+                            if(topRankList[999].leaguePoints<200){
+                                grandmasterLpReq = 200
+                            } else {
+                                grandmasterLpReq = topRankList[999].leaguePoints
+                            }
+
+                            //save LpReq to database
+                            const extractedData = new LpRequirement({
+                                challengerLpRequirement: challengerLpReq,
+                                grandmasterLpRequirement: grandmasterLpReq
+                            })
+                            await extractedData.save();
+
+                        }).catch(err=>err)
+                }).catch(err=>err)
+        }).catch(err=>err)
+}
+
+
+async function calculateAverageRank(matchId){
+    let databaseObject = await MatchData.findOne({matchId: matchId})
+    const unrankedPlayerCount = 0
+    const summedPlayerConvertedRank = 0
+    const convertedPlayerRank_array = [];
+
+    for(let i = 0; i<10; i++){
+        //if player is unranked
+        if(databaseObject.participants[i]==="Unranked"){
+            unrankedPlayerCount = unrankedPlayerCount+1;
+        } else{
+        //if player is ranked convert ranks in to a single number
+            let playerTier = databaseObject.participants[i].tier
+            let playerRank = databaseObject.participants[i].rank
+            let playerLP = databaseObject.participants[i].leaguePoints
+            let convertedPlayerTier = 0;
+            let convertedPlayerRank = 0;
+            let convertedPlayerLP = 0;
+
+            //convert playerTier into number
+            if(playerTier==="CHALLENGER"||playerTier==="GRANDMASTER"||playerTier==="MASTER"){convertedPlayerTier = 2400}
+            else if(playerTier==="DIAMOND"){convertedPlayerTier=2000}
+            else if(playerTier==="PLATINUM"){convertedPlayerTier=1600}
+            else if(playerTier==="GOLD"){convertedPlayerTier=1200}
+            else if(playerTier==="SILVER"){convertedPlayerTier=800}
+            else if(playerTier==="BRONZE"){convertedPlayerTier=400}
+            else if(playerTier==="IRON"){convertedPlayerTier=0}
+            //convert playerRank into number
+            if(playerRank==="IV"){convertedPlayerRank = 100}
+            else if (playerRank==="III"){convertedPlayerRank = 200}
+            else if (playerRank==="II"){convertedPlayerRank = 300}
+            else if (playerRank==="I"){convertedPlayerRank = 400}
+            //convert leaguePoints(if negative due to dodges make it 0)
+            if(playerLP<0){convertedPlayerLP = 0}
+            else {convertedPlayerLP = playerLP}}
+
+            //push to convertedPlayerRank_array 
+            convertedPlayerRank_array.push(convertedPlayerTier+convertedPlayerRank+convertedPlayerLP)
+            //sum all converted variables and add it to summedPlayerConvertedRank
+            summedPlayerConvertedRank = summedPlayerConvertedRank + convertedPlayerTier + convertedPlayerRank + convertedPlayerLP
+        }
+    let averageConvertedRank = summedPlayerConvertedRank/(10-unrankedPlayerCount)
+    databaseObject.averageConvertedRank = averageConvertedRank
+
+    //calculate average tier 
+    //lp requirement should be calculated somewhere else using ladder rank 
+    let averageTier = ""
+    let averageRank = ""
+    let averageLP = ""
+    //grab the lastest LpReq from database
+    let container_LpReq = await LpRequirement.find().sort({createdAt: -1}).limit(1)
+    let challengerLpReq = container_LpReq.challengerLpRequirement
+    let grandmasterLpReq = container_LpReq.grandmasterLpRequirement
+    
+    //get quotient
+    //if average comes out to be d1 100lp, just have it be master 0lp, always be biased to display the ranks higher
+    if(averageConvertedRank<400){
+        averageTier = "IRON"
+        if(averageConvertedRank<100){
+            averageRank = "IV"
+            averageLP = averageConvertedRank
+        } else if (averageConvertedRank<200){
+            averageRank = "III"
+            averageLP = averageConvertedRank-100
+        } else if (averageConvertedRank<300){
+            averageRank = "II"
+            averageLP = averageConvertedRank-200
+        } else if (averageConvertedRank<400){
+            averageRank = "I"
+            averageLP = averageConvertedRank-300
+        }
+    } else if(averageConvertedRank<800){
+        averageTier = "BRONZE"
+        if(averageConvertedRank<500){
+            averageRank = "IV"
+            averageLP = averageConvertedRank-400
+        } else if (averageConvertedRank<600){
+            averageRank = "III"
+            averageLP = averageConvertedRank-500
+        } else if (averageConvertedRank<700){
+            averageRank = "II"
+            averageLP = averageConvertedRank-600
+        } else if (averageConvertedRank<800){
+            averageRank = "I"
+            averageLP = averageConvertedRank-700
+        }
+    } else if(averageConvertedRank<1200){
+        averageTier = "SILVER"
+        if(averageConvertedRank<900){
+            averageRank = "IV"
+            averageLP = averageConvertedRank-800
+        } else if (averageConvertedRank<1000){
+            averageRank = "III"
+            averageLP = averageConvertedRank-900
+        } else if (averageConvertedRank<1100){
+            averageRank = "II"
+            averageLP = averageConvertedRank-1000
+        } else if (averageConvertedRank<1200){
+            averageRank = "I"
+            averageLP = averageConvertedRank-1100
+        }
+    } else if(averageConvertedRank<1600){
+        averageTier = "GOLD"
+        if(averageConvertedRank<1300){
+            averageRank = "IV"
+            averageLP = averageConvertedRank-1200
+        } else if (averageConvertedRank<1400){
+            averageRank = "III"
+            averageLP = averageConvertedRank-1300
+        } else if (averageConvertedRank<1500){
+            averageRank = "II"
+            averageLP = averageConvertedRank-1400
+        } else if (averageConvertedRank<1600){
+            averageRank = "I"
+            averageLP = averageConvertedRank-1500
+        }
+    } else if(averageConvertedRank<2000){
+        averageTier = "PLATINUM"
+        if(averageConvertedRank<1700){
+            averageRank = "IV"
+            averageLP = averageConvertedRank-1600
+        } else if (averageConvertedRank<1800){
+            averageRank = "III"
+            averageLP = averageConvertedRank-1700
+        } else if (averageConvertedRank<1900){
+            averageRank = "II"
+            averageLP = averageConvertedRank-1800
+        } else if (averageConvertedRank<2000){
+            averageRank = "I"
+            averageLP = averageConvertedRank-1900
+        }
+    } else if(averageConvertedRank<2400){
+        averageTier = "DIAMOND"
+        if(averageConvertedRank<2100){
+            averageRank = "IV"
+            averageLP = averageConvertedRank-2000
+        } else if (averageConvertedRank<2200){
+            averageRank = "III"
+            averageLP = averageConvertedRank-2100
+        } else if (averageConvertedRank<2300){
+            averageRank = "II"
+            averageLP = averageConvertedRank-2200
+        } else if (averageConvertedRank<2400){
+            averageRank = "I"
+            averageLP = averageConvertedRank-2300
+        }
+    } else if (averageConvertedRank>=2400 && averageConvertedRank<grandmasterLpReq){
+        averageTier = "MASTER"
+        averageRank = "I"
+        averageLP = averageConvertedRank-2400
+    } else if (averageConvertedRank>=grandmasterLpReq && averageConvertedRank<challengerLpReq){
+        averageTier ="GRANDMASTER"
+        averageRank = "I"
+        averageLP = averageConvertedRank-2400
+    } else if (averageConvertedRank>=challengerLpReq){
+        averageTier ="Challenger"
+        averageRank = "I"
+        averageLP = averageConvertedRank-2400
+    }
+
+    //and push to databaseObject
+    databaseObject.averageTier = averageTier
+    databaseObject.averageRank = averageRank
+    databaseObject.averageLP = averageRank
+    databaseObject.challgengerLpRequirement = challengerLpReq
+    databaseObject.grandmasterLpRequirement = grandmasterLpReq
+    await databaseObject.save();
+}
 
 //get info from a match and only extract and save relevant data, some of the data i need isn't requires other api requests
 async function getSingleMatchInfo(MatchId){
-    return axios.get(REGIONAL_ROUTING_VALUE_ASIA+"/lol/match/v5/matches/"+MatchId+"?api_key="+API_KEY)
+    axios.get(REGIONAL_ROUTING_VALUE_ASIA+"/lol/match/v5/matches/"+MatchId+"?api_key="+API_KEY)
         .then(async response=>{
-            let hi = await MatchData.exists({matchId: response.data.matchId})
-            if(hi){
+            let databaseObject = await MatchData.exists({matchId: response.data.matchId})
+            if(databaseObject){
                 //if matchId already exists in database then update values
                 let something = await MatchData.findOne({matchId: response.data.matchId})
                 something.gameStartTimestamp = response.data.info.gameStartTimestamp
@@ -155,6 +374,7 @@ async function getSingleMatchInfo(MatchId){
                     something.participants[i].eligibleForProgression = response.data.info.participants[i].eligibleForProgression
                     await something.save();
                 }
+                calculateAverageRank(MatchId)
             } else{
                 //if matchId don't exist in database then create a new data point
                 //create data structure and extract relevant data
@@ -349,6 +569,7 @@ async function getSingleMatchInfo(MatchId){
                 )
                 //save matchinfo to database
                 await extractedData.save();
+                calculateAverageRank(MatchId)
             }
         }).catch(err=>err);
 }
@@ -360,72 +581,6 @@ function getAllMatchInfo(match_id_array){
         getSingleMatchInfo(match_id_array[i]);
     }
 }
-
-
-
-let challengerLpReq = 500;
-let grandmasterLpReq = 200;
-async function getLpRequirement(){
-    let topRankList = [];
-
-    //get playerlist from challenger gm and master 
-    axios.get(PLATFORM_ROUTING_VALUE_KR+"/lol/league/v4/challengerleagues/by-queue/RANKED_SOLO_5x5?api_key="+API_KEY)
-        .then((response)=>{
-            let challengerList = response.data.entries
-            topRankList = [...topRankList, ...challengerList]
-
-            axios.get(PLATFORM_ROUTING_VALUE_KR+"/lol/league/v4/grandmasterleagues/by-queue/RANKED_SOLO_5x5?api_key="+API_KEY)
-                .then((response)=>{
-                    let grandmasterList = response.data.entries
-                    topRankList = [...topRankList, ...grandmasterList]
-
-                    axios.get(PLATFORM_ROUTING_VALUE_KR+"/lol/league/v4/masterleagues/by-queue/RANKED_SOLO_5x5?api_key="+API_KEY)
-                        .then(async(response)=>{
-                            let masterList = response.data.entries
-                            topRankList = [...topRankList, ...masterList]
-
-                            //sort topRankList in order of LP, highest LP is index0
-                            topRankList.sort((a,b)=>{
-                                if(a.leaguePoints>b.leaguePoints){
-                                    return -1
-                                }
-                                if(a.leaguePoints<b.leaguePoints){
-                                    return 1
-                                } return 0
-                            })
-                            
-                            //update LPreq for Challenger and GM
-                            if(topRankList[299].leaguePoints<500){
-                                //if 300th rank player's lp is less than 500, challengerLpReq should be 500
-                                challengerLpReq = 500
-                            } else {
-                                //if 300th rank player's lp is 500 or more, challengerLpReq should be updated to that player's current lp
-                                challengerLpReq = topRankList[299].leaguePoints
-                            }
-                            if(topRankList[999].leaguePoints<200){
-                                grandmasterLpReq = 200
-                            } else {
-                                grandmasterLpReq = topRankList[999].leaguePoints
-                            }
-
-                            //save LpReq to database
-                            const extractedData = new LpRequirement({
-                                challengerLpRequirement: challengerLpReq,
-                                grandmasterLpRequirement: grandmasterLpReq
-                            })
-                            await extractedData.save();
-
-                        }).catch(err=>err)
-                }).catch(err=>err)
-        }).catch(err=>err)
-}
-
-//get lpRequirement every 2hrs 
-const interval_getLpRequirement = setInterval(function(){
-    getLpRequirement();
-}, 7200000)
-
-
 
 
 //check if tyler is in a ranked game and get info from live game if in game
@@ -532,179 +687,13 @@ async function getMatchInfoFromLiveGame(SummonerId){
         }).catch(err=>err)
 }
 
-async function calculateAverageRank(matchId){
-    let databaseObject = await MatchData.findOne({matchId: matchId})
-    const unrankedPlayerCount = 0
-    const summedPlayerConvertedRank = 0
-    const convertedPlayerRank_array = [];
 
-    for(let i = 0; i<10; i++){
-        //if player is unranked
-        if(databaseObject.participants[i]==="Unranked"){
-            unrankedPlayerCount = unrankedPlayerCount+1;
-        } else{
-        //if player is ranked convert ranks in to a single number
-            let playerTier = databaseObject.participants[i].tier
-            let playerRank = databaseObject.participants[i].rank
-            let playerLP = databaseObject.participants[i].leaguePoints
-            let convertedPlayerTier = 0;
-            let convertedPlayerRank = 0;
-            let convertedPlayerLP = 0;
+//get lpRequirement every 2hrs 
+const interval_getLpRequirement = setInterval(function(){
+    getLpRequirement();
+}, 7200000)
 
-            //convert playerTier into number
-            if(playerTier==="CHALLENGER"||playerTier==="GRANDMASTER"||playerTier==="MASTER"){convertedPlayerTier = 2400}
-            else if(playerTier==="DIAMOND"){convertedPlayerTier=2000}
-            else if(playerTier==="PLATINUM"){convertedPlayerTier=1600}
-            else if(playerTier==="GOLD"){convertedPlayerTier=1200}
-            else if(playerTier==="SILVER"){convertedPlayerTier=800}
-            else if(playerTier==="BRONZE"){convertedPlayerTier=400}
-            else if(playerTier==="IRON"){convertedPlayerTier=0}
-            //convert playerRank into number
-            if(playerRank==="IV"){convertedPlayerRank = 100}
-            else if (playerRank==="III"){convertedPlayerRank = 200}
-            else if (playerRank==="II"){convertedPlayerRank = 300}
-            else if (playerRank==="I"){convertedPlayerRank = 400}
-            //convert leaguePoints(if negative due to dodges make it 0)
-            if(playerLP<0){convertedPlayerLP = 0}
-            else {convertedPlayerLP = playerLP}}
-
-            //push to convertedPlayerRank_array 
-            convertedPlayerRank_array.push(convertedPlayerTier+convertedPlayerRank+convertedPlayerLP)
-            //sum all converted variables and add it to summedPlayerConvertedRank
-            summedPlayerConvertedRank = summedPlayerConvertedRank + convertedPlayerTier + convertedPlayerRank + convertedPlayerLP
-        }
-    let averageConvertedRank = summedPlayerConvertedRank/(10-unrankedPlayerCount)
-    databaseObject.averageConvertedRank = averageConvertedRank
-
-    //calculate average tier 
-    //lp requirement should be calculated somewhere else using ladder rank 
-    let averageTier = ""
-    let averageRank = ""
-    let averageLP = ""
-    //grab the lastest LpReq from database
-    let container_LpReq = await LpRequirement.find().sort({createdAt: -1}).limit(1)
-    let challengerLpReq = container_LpReq.challengerLpRequirement
-    let grandmasterLpReq = container_LpReq.grandmasterLpRequirement
-    
-    //get quotient
-    //if average comes out to be d1 100lp, just have it be master 0lp, always be biased to display the ranks higher
-    if(averageConvertedRank<400){
-        averageTier = "IRON"
-        if(averageConvertedRank<100){
-            averageRank = "IV"
-            averageLP = averageConvertedRank
-        } else if (averageConvertedRank<200){
-            averageRank = "III"
-            averageLP = averageConvertedRank-100
-        } else if (averageConvertedRank<300){
-            averageRank = "II"
-            averageLP = averageConvertedRank-200
-        } else if (averageConvertedRank<400){
-            averageRank = "I"
-            averageLP = averageConvertedRank-300
-        }
-    } else if(averageConvertedRank<800){
-        averageTier = "BRONZE"
-        if(averageConvertedRank<500){
-            averageRank = "IV"
-            averageLP = averageConvertedRank-400
-        } else if (averageConvertedRank<600){
-            averageRank = "III"
-            averageLP = averageConvertedRank-500
-        } else if (averageConvertedRank<700){
-            averageRank = "II"
-            averageLP = averageConvertedRank-600
-        } else if (averageConvertedRank<800){
-            averageRank = "I"
-            averageLP = averageConvertedRank-700
-        }
-    } else if(averageConvertedRank<1200){
-        averageTier = "SILVER"
-        if(averageConvertedRank<900){
-            averageRank = "IV"
-            averageLP = averageConvertedRank-800
-        } else if (averageConvertedRank<1000){
-            averageRank = "III"
-            averageLP = averageConvertedRank-900
-        } else if (averageConvertedRank<1100){
-            averageRank = "II"
-            averageLP = averageConvertedRank-1000
-        } else if (averageConvertedRank<1200){
-            averageRank = "I"
-            averageLP = averageConvertedRank-1100
-        }
-    } else if(averageConvertedRank<1600){
-        averageTier = "GOLD"
-        if(averageConvertedRank<1300){
-            averageRank = "IV"
-            averageLP = averageConvertedRank-1200
-        } else if (averageConvertedRank<1400){
-            averageRank = "III"
-            averageLP = averageConvertedRank-1300
-        } else if (averageConvertedRank<1500){
-            averageRank = "II"
-            averageLP = averageConvertedRank-1400
-        } else if (averageConvertedRank<1600){
-            averageRank = "I"
-            averageLP = averageConvertedRank-1500
-        }
-    } else if(averageConvertedRank<2000){
-        averageTier = "PLATINUM"
-        if(averageConvertedRank<1700){
-            averageRank = "IV"
-            averageLP = averageConvertedRank-1600
-        } else if (averageConvertedRank<1800){
-            averageRank = "III"
-            averageLP = averageConvertedRank-1700
-        } else if (averageConvertedRank<1900){
-            averageRank = "II"
-            averageLP = averageConvertedRank-1800
-        } else if (averageConvertedRank<2000){
-            averageRank = "I"
-            averageLP = averageConvertedRank-1900
-        }
-    } else if(averageConvertedRank<2400){
-        averageTier = "DIAMOND"
-        if(averageConvertedRank<2100){
-            averageRank = "IV"
-            averageLP = averageConvertedRank-2000
-        } else if (averageConvertedRank<2200){
-            averageRank = "III"
-            averageLP = averageConvertedRank-2100
-        } else if (averageConvertedRank<2300){
-            averageRank = "II"
-            averageLP = averageConvertedRank-2200
-        } else if (averageConvertedRank<2400){
-            averageRank = "I"
-            averageLP = averageConvertedRank-2300
-        }
-    } else if (averageConvertedRank>=2400 && averageConvertedRank<grandmasterLpReq){
-        averageTier = "MASTER"
-        averageRank = "I"
-        averageLP = averageConvertedRank-2400
-    } else if (averageConvertedRank>=grandmasterLpReq && averageConvertedRank<challengerLpReq){
-        averageTier ="GRANDMASTER"
-        averageRank = "I"
-        averageLP = averageConvertedRank-2400
-    } else if (averageConvertedRank>=challengerLpReq){
-        averageTier ="Challenger"
-        averageRank = "I"
-        averageLP = averageConvertedRank-2400
-    }
-
-    //and push to databaseObject
-    databaseObject.averageTier = averageTier
-    databaseObject.averageRank = averageRank
-    databaseObject.averageLP = averageRank
-    databaseObject.challgengerLpRequirement = challengerLpReq
-    databaseObject.grandmasterLpRequirement = grandmasterLpReq
-    await databaseObject.save();
-}
-
-
-
-
-//loop the function every 1min
+//get liveGameInfo every 1min
 const interval = setInterval(function(){
     getMatchInfoFromLiveGame(Summoner_Id_IN_USE);
     getMatchInfoFromLiveGame(Summoner_Id_OdinH);
