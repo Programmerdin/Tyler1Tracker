@@ -211,11 +211,13 @@ async function calculateAverageRank(matchId){
             else if(playerTier==="SILVER"){convertedPlayerTier=800}
             else if(playerTier==="BRONZE"){convertedPlayerTier=400}
             else if(playerTier==="IRON"){convertedPlayerTier=0}
+            else if(playerTier==="Unranked"){convertedPlayerTier=0}
             //convert playerRank into number
             if(playerRank==="IV"){convertedPlayerRank = 100}
             else if (playerRank==="III"){convertedPlayerRank = 200}
             else if (playerRank==="II"){convertedPlayerRank = 300}
             else if (playerRank==="I"){convertedPlayerRank = 400}
+            else if (playerRank==="Unranked"){convertedPlayerRank = 0}
             //convert leaguePoints(if negative due to dodges make it 0)
             if(playerLP<0){
                 convertedPlayerLP = 0
@@ -721,6 +723,8 @@ async function getMatchInfoFromLiveGame(SummonerId){
                             //if player is unranked .find() should return undefined
                             if(temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5') == undefined){
                                 dataObject.participants[i].tier = "Unranked"
+                                dataObject.participants[i].rank = "Unranked"
+                                dataObject.participants[i].leaguePoints = "0"
                                 await dataObject.save();
                             } else{
                                 dataObject.participants[i].tier = temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5').tier
