@@ -738,7 +738,7 @@ async function getMatchInfoFromLiveGame(SummonerId){
                 }
             }
         
-            //calculateAverageRank(response.data.matchId);
+            calculateAverageRank(response.data.matchId);
         }).catch(err=>err)
 }
 
