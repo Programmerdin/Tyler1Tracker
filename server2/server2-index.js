@@ -24,7 +24,7 @@ mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology:true})
 
 
 //Riot API Key
-const API_KEY = "RGAPI-584d39f9-e0ad-4e0a-9c39-0e9bf79a53eb";
+const API_KEY = "RGAPI-b68862a1-2ce8-43a8-814a-b41279875a06";
 
 const PLATFORM_ROUTING_VALUE_NA = "https://na1.api.riotgames.com";
 const PLATFORM_ROUTING_VALUE_KR = "https://kr.api.riotgames.com";
@@ -1650,47 +1650,40 @@ async function data_collect_stats(){
 
 //update data values
 async function data_collect_charts(){
-    let data_TOP = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 1}, {participantId: 6}]}}})
-    let data_JG =  await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 2}, {participantId: 7}]}}})
-    let data_MID = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 3}, {participantId: 8}]}}})
-    let data_BOT = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 4}, {participantId: 9}]}}})
-    let data_SUP = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 5}, {participantId: 10}]}}})
-    
-    let TotalNumberOfGames = await MatchData.count({mainPlayerSummonerId: Summoner_Id_IN_USE})
-        
-    let NumberOfGames_TOP =  data_TOP.length
-    let NumberOfGames_JG =  data_JG.length
-    let NumberOfGames_MID = data_MID.length
-    let NumberOfGames_BOT = data_BOT.length
-    let NumberOfGames_SUP = data_SUP.length
-    
-    let NumberOfWins_TOP = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 1}, {participantId: 6}], win:true}}})
-    let NumberOfWins_JG =  await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 2}, {participantId: 7}], win:true}}})
-    let NumberOfWins_MID = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 3}, {participantId: 8}], win:true}}})
-    let NumberOfWins_BOT = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 4}, {participantId: 9}], win:true}}})
-    let NumberOfWins_SUP = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 5}, {participantId: 10}], win:true}}})
+  let data_TOP = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 1}, {participantId: 6}]}}})
+  let data_JG =  await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 2}, {participantId: 7}]}}})
+  let data_MID = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 3}, {participantId: 8}]}}})
+  let data_BOT = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 4}, {participantId: 9}]}}})
+  let data_SUP = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 5}, {participantId: 10}]}}})
+  
+  let TotalNumberOfGames = await MatchData.count({mainPlayerSummonerId: Summoner_Id_IN_USE})
+      
+  let NumberOfGames_TOP =  data_TOP.length
+  let NumberOfGames_JG =  data_JG.length
+  let NumberOfGames_MID = data_MID.length
+  let NumberOfGames_BOT = data_BOT.length
+  let NumberOfGames_SUP = data_SUP.length
+  
+  let NumberOfWins_TOP = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 1}, {participantId: 6}], win:true}}})
+  let NumberOfWins_JG =  await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 2}, {participantId: 7}], win:true}}})
+  let NumberOfWins_MID = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 3}, {participantId: 8}], win:true}}})
+  let NumberOfWins_BOT = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 4}, {participantId: 9}], win:true}}})
+  let NumberOfWins_SUP = await MatchData.find({participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE, $or: [{participantId: 5}, {participantId: 10}], win:true}}})
 
-    //Role Assignment
-    let Role_Assignment_TOP = Math.round(NumberOfGames_TOP*1000/TotalNumberofGames)/10
-    let Role_Assignment_JG =  Math.round(NumberOfGames_JG*1000/TotalNumberofGames)/10
-    let Role_Assignment_MID = Math.round(NumberOfGames_MID*1000/TotalNumberofGames)/10
-    let Role_Assignment_BOT = Math.round(NumberOfGames_BOT*1000/TotalNumberofGames)/10
-    let Role_Assignment_SUP = Math.round(NumberOfGames_SUP*1000/TotalNumberofGames)/10
+  //Role Assignment
+  let Role_Assignment_TOP = Math.round(NumberOfGames_TOP*1000/TotalNumberofGames)/10
+  let Role_Assignment_JG =  Math.round(NumberOfGames_JG*1000/TotalNumberofGames)/10
+  let Role_Assignment_MID = Math.round(NumberOfGames_MID*1000/TotalNumberofGames)/10
+  let Role_Assignment_BOT = Math.round(NumberOfGames_BOT*1000/TotalNumberofGames)/10
+  let Role_Assignment_SUP = Math.round(NumberOfGames_SUP*1000/TotalNumberofGames)/10
 
-    //Win Rate per Role
-    let Win_Rate_TOP = Math.round(NumberOfWins_TOP*1000/NumberOfGames_TOP)/10
-    let Win_Rate_JG = Math.round(NumberOfWins_JG*1000/NumberOfGames_TOP)/10
-    let Win_Rate_MID = Math.round(NumberOfWins_MID*1000/NumberOfGames_TOP)/10
-    let Win_Rate_BOT = Math.round(NumberOfWins_BOT*1000/NumberOfGames_TOP)/10
-    let Win_Rate_SUP = Math.round(NumberOfWins_SUP*1000/NumberOfGames_TOP)/10
-
-
+  //Win Rate per Role
+  let Win_Rate_TOP = Math.round(NumberOfWins_TOP*1000/NumberOfGames_TOP)/10
+  let Win_Rate_JG = Math.round(NumberOfWins_JG*1000/NumberOfGames_TOP)/10
+  let Win_Rate_MID = Math.round(NumberOfWins_MID*1000/NumberOfGames_TOP)/10
+  let Win_Rate_BOT = Math.round(NumberOfWins_BOT*1000/NumberOfGames_TOP)/10
+  let Win_Rate_SUP = Math.round(NumberOfWins_SUP*1000/NumberOfGames_TOP)/10
 }
-
-
-
-
-
 
 
 async function getDataForLpClimbGraph(Summoner_ID){
