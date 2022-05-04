@@ -1,3 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
 .App-box{
     background-color: rgb(104, 121, 128);
+    height: 1700px;
+}
+
+.Components-box{
+    display: grid;
+    justify-items: center;
+    align-items: center;
+}
+
+.LpClimbGraph-box {
+    margin-top: 25px;
+    width: 1300px;
+    background-color: rgb(2, 71, 94);
+    font-family: 'Inter', sans-serif;
+    color: rgb(244, 238, 232);
 }

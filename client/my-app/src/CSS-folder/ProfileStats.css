@@ -1,5 +1,142 @@
+
 .ProfileStats-box {
     width: 1300px;
     height: 600px;
     background-color: rgb(2, 71, 94);
+    display: grid;
+    grid-template-columns: 350px 300px 650px;
+    grid-template-rows: 300px 300px;
+    justify-items: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
+    color: rgb(244, 238, 232);
+}
+
+.section1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    text-align: center;
+}
+
+.section2 {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    text-align: center;
+}
+.section3 {
+    grid-column-start: 3;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
+.section-footnotes{
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    align-self: end;
+}
+
+.profilePic{
+
+}
+
+.section1-1{
+    font-weight: bold;
+    font-size: xx-large;
+}
+.section1-2{
+    font-size: small;
+}
+.section1-3{
+    font-weight: bold;
+    font-size: x-large;
+}
+.section1-4{
+    font-size: x-large;
+}
+.section1-5{
+    font-size: large;
+}
+
+
+.section2-1{
+    font-size: medium;
+}
+.section2-2{
+    font-size: large;
+    font-weight: bold;
+}
+.section2-3{
+    font-size: medium;
+}
+.section2-4{
+    font-size: large;
+    font-weight: bold;
+}
+.section2-5{
+    font-size: medium;
+}
+.section2-6{
+    font-size: large;
+    font-weight: bold;
+}
+.section2-7{
+    font-size: large;
+
+}
+.section2-8{
+    font-size: medium;
+
+}
+.section2-9{
+    font-size: large;
+    font-weight: bold;
+
+}
+.section2-10{
+    font-size: medium;
+
+}
+.section2-11{
+    font-size: large;
+    font-weight: bold;
+}
+.section2-12{
+    font-size: medium;
+}
+.section2-13{
+    font-size: large;
+    font-weight: bold;
+}
+.section2-14{
+    font-size: medium;
+}
+.section2-15{
+    font-size: large;
+    font-weight: bold;
+}
+
+
+.section3-1{
+    background-color: rgb(244, 238, 232);
+    width: 525px;
+    margin: 25px;
+}
+.section3-2{
+    background-color: rgb(244, 238, 232);
+    width: 525px;
+    margin: 25px;
+}
+
+.section-footnotes1{
+    font-size: xx-small;
+}
+.section-footnotes2{
+    font-size: xx-small;
 }
