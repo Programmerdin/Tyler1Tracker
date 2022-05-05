@@ -1,13 +1,23 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import RoleAssignmentChart from "./RoleAssignmentChart";
 import WinRateChart from "./WinRateChart";
 import './CSS-folder/ProfileStats.css'
 import Tyler1pic from './pictures/Tyler1-profile-pic.png'
+import axios from "axios";
 
 const ProfileStats = () => {
 
-  
+  const [stats, setStats] = useState()
+  //grab data from server
+  const getData = ()=>{
+    axios.get("https://localhost3000/").then((response)=>{
+      console.log(response)
+      setStats(response)
+    })
+  }
+
   return (
     <div className="ProfileStats-box">
       <div className="section1">

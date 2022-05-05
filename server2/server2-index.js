@@ -22,9 +22,12 @@ mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology:true})
         }) //localhost:3000
     }).catch(err=>console.log(err));
 
+app.get("/", (req, res)=>{
+  res.send(global_data_PROFILE_STATS);
+})
 
 //Riot API Key
-const API_KEY = "RGAPI-b68862a1-2ce8-43a8-814a-b41279875a06";
+const API_KEY = "RGAPI-6827324e-7f70-42dd-8886-6ba601ab66a8";
 
 const PLATFORM_ROUTING_VALUE_NA = "https://na1.api.riotgames.com";
 const PLATFORM_ROUTING_VALUE_KR = "https://kr.api.riotgames.com";
@@ -47,18 +50,39 @@ const Summoner_Id_IN_USE = summoner_Id_Tyler1;
 const PUUID_IN_USE = PUUID_Tyler1;
 
 
-const global_match_data = [];
-
-
-
-//get PUUUID using SummonerName
-function getPUUIDbySummonerName(summoner_name){
-    return axios.get(PLATFORM_ROUTING_VALUE_KR+"/lol/summoner/v4/summoners/by-name/"+summoner_name+"?api_key="+API_KEY)
-        .then(response=>{
-            //console.log(response.data);
-            return response.data.puuid
-        }).catch(err=>err);
+const global_data_PROFILE_STATS = {
+  challengerLpRequirement: 500,
+  tier: "",
+  rank: "",
+  leaguePoints: "",
+  wins: 0,
+  losses: 0,
+  gamesPlayed: 0,
+  timeSpentInGame: 0,
+  kills: 0,
+  deaths: 0,
+  deathsByEnemyChamps: 0,
+  assits: 0,
+  uniqueChampionsPlayed: 0,
+  pentaKill: 0,
+  longestWinStreak: 0,
+  longestLossStreak: 0,
+  assignRateTop: 0,
+  assignRateJg: 0,
+  assignRateMid: 0,
+  assignRateBot: 0,
+  assignRateSup: 0,
+  winRateTop: 0,
+  winRateJg: 0,
+  winRateMid: 0,
+  winRateBot: 0,
+  winRateSup: 0
+};
+const global_data_LP_GRAPH = []
+const data_for_LP_GRAPH = {
+  
 }
+
 
 //get last ranked game's match id 
 //this will only need to be run everytime tyler1 finishes a game
@@ -117,10 +141,6 @@ function getAllMatchId(PUUID, Summoner_ID){
     }
 
 //getAllMatchId(PUUID_IN_USE, Summoner_Id_IN_USE)
-
-
-
-
 
 
 
@@ -766,31 +786,29 @@ const interval = setInterval(function(){
 
 
 async function data_collect_profile(){
-    axios.get(REGIONAL_ROUTING_VALUE_ASIA+"/lol/league/v4/entries/by-summoner/"+Summoner_Id_IN_USE+"?api_key="+API_KEY)
-        .then(async response=>{
-            if(temp[0].queueType="RANKED_SOLO_5x5"){
-                let temp = response.data
-                let PlayerTier = temp[0].tier
-                let PlayerRank = temp[0].rank
-                let PlayerLP = temp[0].leaguePoints
-                let PlayerWins = temp[0].wins
-                let PlayerLosses = temp[0].losses
-            } else if(temp[1].queueType="RANKED_SOLO_5x5"){
-                let temp = response.data
-                let PlayerTier = temp[1].tier
-                let PlayerRank = temp[1].rank
-                let PlayerLP = temp[1].leaguePoints
-                let PlayerWins = temp[1].wins
-                let PlayerLosses = temp[1].losses
-            } else if(temp[2].queueType="RANKED_SOLO_5x5"){
-                let temp = response.data
-                let PlayerTier = temp[2].tier
-                let PlayerRank = temp[2].rank
-                let PlayerLP = temp[2].leaguePoints
-                let PlayerWins = temp[2].wins
-                let PlayerLosses = temp[2].losses
-            }
-        }).catch(err=>err)
+  let PlayerTier = ""
+  let PlayerRank = ""
+  let PlayerLP = 0
+  let PlayerWins = 0
+  let PlayerLosses = 0
+
+  //grab the latest document created 
+  let databaseDocument1 = await MatchData.find({mainPlayerSummonerId: Summoner_Id_IN_USE}).sort({createdAt: -1}).limit(1)
+
+  for(let i = 0; i<10; i++){
+    if(databaseDocument1.participants[i].summonerId = Summoner_Id_IN_USE){
+      PlayerTier = databaseDocument1.participants[i].tier
+      PlayerRank = databaseDocument1.participants[i].rank
+      PlayerLP = databaseDocument1.participants[i].leaguePoints
+      PlayerWins = databaseDocument1.participants[i].wins
+      PlayerLosses = databaseDocument1.participants[i].losses
+    }
+  }
+
+  //grab the latest document created 
+  let databaseDocument2 = await LpRequirement.find().sort({createdAt: -1}).limit(1)
+  let challengerLpRequirement = databaseDocument2.challengerLpRequirement
+  //let grandmasterLpRequirement = databaseDocument2.grandmasterLpRequirement
 }
 
 
@@ -818,6 +836,25 @@ async function data_collect_stats(){
             }
         }
     }])
+      //death_count excludes executions
+    let death_count = await MatchData.aggregate([{
+      $match:{participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE}}},
+      $group: {
+          _id: null,
+          total:{
+              $sum: $deathsByEnemyChamps
+          }
+      }
+  }])
+  let assist_count = await MatchData.aggregate([{
+    $match:{participants: {$elemMatch: {summonerId:Summoner_Id_IN_USE}}},
+    $group: {
+        _id: null,
+        total:{
+            $sum: $assists
+        }
+    }
+}])
     //Unique Champions Played
     const champions = [
         {
@@ -1643,6 +1680,8 @@ async function data_collect_stats(){
     console.log("games played: "+ Games_Played)
     console.log("time spent in games: "+ Time_Spent_in_Games)
     console.log("Kills: "+kill_count)
+    console.log("Unique Champs"+temp_counter)
+
 }
 
 
