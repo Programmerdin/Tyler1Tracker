@@ -35,15 +35,9 @@ const REGIONAL_ROUTING_VALUE_AMERICAS = "https://americas.api.riotgames.com";
 const REGIONAL_ROUTING_VALUE_ASIA = "https://asia.api.riotgames.com";
 
 const PUUID_Tyler1 ="BpLZeAfvm3qEzTH4CYWNdgJM30A2wV2WYOmI1aW0LqCLvpzNhH9DSGluoI8giby-hmsq-4zAm3ljcg";
-const PUUID_Monster_Rat = "LTA_R2kMkE2_ID1kHk548Skn3ghahPjnZjbNuscpxXsOgcnc4Zx9__KYzDoqEwrf4OkCRbTQBr0vvQ";
-const PUUID_TF_Blade = "ti_ymO1OhlkhIVTbUac9S9OKDKzjTWtEfuS-dRFJFpJphS8sP9xtvOWbnbUQYQj01pmUeSCzK9ICXQ"
-const PUUID_CvMax = "UDatzjFxuWmdtEWaJZfaYpObALvEJjZi02yw3Es6_4tU6YMGJGd7EIyFdo5mL1IX-SBrr8VMZg1qhA"
 const PUUID_OdinH = "emc59JHj1cEGSjhamAw-VHxq2xrdJP91bW6dmZUI5si7yzVj1SVb20HIFnQuKaOGHXRNrlbxjnnpFA";
 
 const summoner_Id_Tyler1 ="bey9odNQde0Xerc5utFzZQALRJD8at5qib0c8xXEqiuLU-Qwq9voBJo-RA";
-const Summoner_Id_Monster_Rat = "SH7_n-u4xYyYP8eBvwJ2b2VYCyGwAJJX1Li8nFGlF4v7Ag"
-const Summoner_Id_TF_Blade = "0GCVVBy6TJyedu8OR_cl6q-9eKpI8pMHRc7ZmqmgTyzEkN0jGn7dlPr1pw"
-const Summoner_Id_CvMAx = "bfG-EWc6Zw807WXYxfdmFozS1Mi0gM5BSjgHTBlhObi5mw"
 const Summoner_Id_OdinH = "ONoisfMZ7kCfgy7u0ZwLji6ZNBDRJshn-4OEPKhz-p8RqX665LAs2QblSg"
 
 const Summoner_Id_IN_USE = summoner_Id_Tyler1;
@@ -439,6 +433,40 @@ async function getSingleMatchInfo(MatchId){
             .then(async response=>{
                 //if matchId don't exist in database then create a new data point
                 //create data structure and extract relevant data
+                let temp_mainPlayerParticipantId = 0
+                let temp_mainPlayerTeamPosition = ""
+                let temp_mainPlayerPuuid = ""
+                let temp_mainPlayerChampionId = 0
+                let temp_mainPlayerTier = ""
+                let temp_mainPlayerRank = ""
+                let temp_mainPlayerLeaguePoints = 0 
+                let temp_mainPlayerWins = 0
+                let temp_mainPlayerLosses = 0
+                let temp_mainPlayerKills = 0
+                let temp_mainPlayerDeaths = 0
+                let temp_mainPlayerDeathsByEnemyChampions = 0
+                let temp_mainPlayerAssists = 0
+                let temp_mainPlayerWin = false
+                for(let i = 0; i<10; i++){
+                  if(response.data.info.participants[i].puuid === PUUID_IN_USE){
+                    temp_mainPlayerParticipantId = response.data.info.participants[i].participantId
+                    temp_mainPlayerTeamPosition = response.data.info.participants[i].teamPosition
+                    temp_mainPlayerPuuid = response.data.info.participants[i].puuid
+                    temp_mainPlayerChampionId = response.data.info.participants[i].championId
+                    temp_mainPlayerTier = response.data.info.participants[i].tier
+                    temp_mainPlayerRank = response.data.info.participants[i].rank
+                    temp_mainPlayerLeaguePoints = response.data.info.participants[i].leaguePoints
+                    temp_mainPlayerWins = response.data.info.participants[i].wins
+                    temp_mainPlayerLosses = response.data.info.participants[i].losses
+                    temp_mainPlayerKills = response.data.info.participants[i].kills
+                    temp_mainPlayerDeaths = response.data.info.participants[i].deaths
+                    temp_mainPlayerDeathsByEnemyChampions = response.data.info.participants[i].deathsByEnemyChamps
+                    temp_mainPlayerAssists = response.data.info.participants[i].assists
+                    temp_mainPlayerWin = response.data.info.participants[i].win
+                  }
+                }
+
+
                 const extractedData = new MatchData(
                     {
                         mainPlayerSummonerId: Summoner_Id_IN_USE,
@@ -446,6 +474,20 @@ async function getSingleMatchInfo(MatchId){
                         isThisFullyUpdated: true,
                         gameStartTimestamp: response.data.info.gameStartTimestamp,
                         gameDuration: response.data.info.gameDuration,
+                        mainPlayerParticipantId: temp_mainPlayerParticipantId,
+                        mainPlayerTeamPosition: temp_mainPlayerTeamPosition,
+                        mainPlayerPuuid: temp_mainPlayerPuuid,
+                        mainPlayerChampionId: temp_mainPlayerChampionId,
+                        mainPlayerTier: temp_mainPlayerTier,
+                        mainPlayerRank: temp_mainPlayerRank,
+                        mainPlayerLeaguePoints: temp_mainPlayerLeaguePoints,
+                        mainPlayerWins: temp_mainPlayerWins,
+                        mainPlayerLosses: temp_mainPlayerLosses,
+                        mainPlayerKills: temp_mainPlayerKills,
+                        mainPlayerDeaths: temp_mainPlayerDeaths,
+                        mainPlayerDeathsByEnemyChampions: temp_mainPlayerDeathsByEnemyChampions,
+                        mainPlayerAssists: temp_mainPlayerAssists,
+                        mainPlayerWin: temp_mainPlayerWin,
                         participants: [
                             {
                                 participantId: response.data.info.participants[0].participantId,
@@ -636,6 +678,7 @@ async function getSingleMatchInfo(MatchId){
     }
 }
 
+
 //loop through MatchIdArray which contains all the ranked matches ids of a player and run getSingleMatchInfo on loop 
 function getAllMatchInfo(){
     //grab list of all matchIds from Riot API
@@ -662,9 +705,20 @@ async function getMatchInfoFromLiveGame(SummonerId){
             if(check1){
                 console.log("match data already in database")
             } else if(response.data.gameQueueConfigId === 420){
+              let temp_mainPlayerTeamId = 0
+              let temp_mainPlayerChampionId = 0
+              for(let i = 0; i < 10; i++){
+                if(response.data.participants[i].summonerId === Summoner_Id_IN_USE){
+                  temp_mainPlayerTeamId = response.data.participants[i].teamId
+                  temp_mainPlayerChampionId = response.data.participants[i].championId
+                }
+              }
+
                 //add the new data in if the game is ranked (ie gameQueueConfigId = 420)
                 const extractedData = new MatchData({
                     mainPlayerSummonerId: SummonerId,
+                    mainPlayerTeamId: temp_mainPlayerTeamId,
+                    mainPlayerChampionId: temp_mainPlayerChampionId,
                     matchId: response.data.platformId+"_"+response.data.gameId,
                     participants: [
                         {
@@ -739,11 +793,17 @@ async function getMatchInfoFromLiveGame(SummonerId){
                     .then(async(response)=>{
                         let temporary_extracted_data = response.data;
                         let dataObject = await MatchData.findOne({matchId: temporary_matchId})
+                        
                             //if player is unranked .find() should return undefined
                             if(temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5') == undefined){
                                 dataObject.participants[i].tier = "Unranked"
                                 dataObject.participants[i].rank = "Unranked"
-                                dataObject.participants[i].leaguePoints = "0"
+                                dataObject.participants[i].leaguePoints = 0
+                                if(dataObject.participants[i].summonerId === Summoner_Id_IN_USE){
+                                  dataObject.mainPlayerTier = "Unranked"
+                                  dataObject.mainPlayerRank = "Unranked"
+                                  dataObject.mainPlayerLeaguePoints = 0
+                                }
                                 await dataObject.save();
                             } else{
                                 dataObject.participants[i].tier = temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5').tier
@@ -751,6 +811,13 @@ async function getMatchInfoFromLiveGame(SummonerId){
                                 dataObject.participants[i].leaguePoints = temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5').leaguePoints;
                                 dataObject.participants[i].wins = temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5').wins;
                                 dataObject.participants[i].losses = temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5').losses;
+                                if(dataObject.participants[i].summonerId === Summoner_Id_IN_USE){
+                                  dataObject.mainPlayerTier = temporary_extracted_data.find(x=>queueType === "RANKED_SOLO_5x5").tier
+                                  dataObject.mainPlayerRank = temporary_extracted_data.find(x=>queueType === "RANKED_SOLO_5x5").rank
+                                  dataObject.mainPlayerLeaguePoints = temporary_extracted_data.find(x=>queueType === "RANKED_SOLO_5x5").leaguePoints
+                                  dataObject.mainPlayerWins = temporary_extracted_data.find(x=>queueType === "RANKED_SOLO_5x5").wins
+                                  dataObject.mainPlayerLosses = temporary_extracted_data.find(x=>queueType === "RANKED_SOLO_5x5").losses
+                                }
                                 await dataObject.save();
                             }                           
                     }).catch(err=>err)

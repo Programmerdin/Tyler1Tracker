@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
 const matchSchema = new Schema({
-    mainPlayerSummonerId: {type: String},
     isThisFullyUpdated:{type: Boolean},
     matchId: {type: String},
     gameStartTimestamp: {type: Number},
@@ -14,6 +13,20 @@ const matchSchema = new Schema({
     challgengerLpRequirement: {type: Number},
     grandmasterLpRequirement: {type: Number},
     gameNumber: {type: Number},// need to be commputed, 1st 2nd 3rd ...etc  ranked game of tyler
+    mainPlayerSummonerId: {type: String},
+    mainPlayerTeamId: {type: Number},
+    mainPlayerChampionId: {type: Number},
+    mainPalyerPuuid: {type: String},
+    mainPlayerTier: {type: String},
+    mainPlayerRank: {type: String},
+    mainPlayerLeaguePoints: {type: Number},
+    mainPlayerWins: {type: Number},
+    mainPlayerLosses: {type: Number},
+    mainPlayerKills: {type: Number},
+    mainPlayerDeaths: {type: Number},
+    mainPlayerDeathsByEnemyChampions: {type: Number},
+    mainPlayerAssists: {type: Number},
+    mainPlayerWin: {type: Boolean},
     participants: [
         {
             participantId: {type: Number},
