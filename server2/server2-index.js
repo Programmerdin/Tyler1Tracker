@@ -34,10 +34,10 @@ const PLATFORM_ROUTING_VALUE_KR = "https://kr.api.riotgames.com";
 const REGIONAL_ROUTING_VALUE_AMERICAS = "https://americas.api.riotgames.com";
 const REGIONAL_ROUTING_VALUE_ASIA = "https://asia.api.riotgames.com";
 
-const PUUID_Tyler1 ="BpLZeAfvm3qEzTH4CYWNdgJM30A2wV2WYOmI1aW0LqCLvpzNhH9DSGluoI8giby-hmsq-4zAm3ljcg";
+const PUUID_Tyler1 ="6LeZJvSMRIq10lQuVKyKsLzswgYvKW-SnPkGG_kM2r_AlW-sbtmDByMLD13nX3zLoAs51MfTkNQEgg";
 const PUUID_OdinH = "emc59JHj1cEGSjhamAw-VHxq2xrdJP91bW6dmZUI5si7yzVj1SVb20HIFnQuKaOGHXRNrlbxjnnpFA";
 
-const summoner_Id_Tyler1 ="bey9odNQde0Xerc5utFzZQALRJD8at5qib0c8xXEqiuLU-Qwq9voBJo-RA";
+const summoner_Id_Tyler1 ="5sg3w0btZpB8QZIxDANIwKk9w8oTwf8Rq-SDUZJbCJkxf81Jk8SV7XnYYA";
 const Summoner_Id_OdinH = "ONoisfMZ7kCfgy7u0ZwLji6ZNBDRJshn-4OEPKhz-p8RqX665LAs2QblSg"
 
 const Summoner_Id_IN_USE = summoner_Id_Tyler1;
