@@ -16,7 +16,7 @@ const matchSchema = new Schema({
     mainPlayerSummonerId: {type: String},
     mainPlayerTeamId: {type: Number},
     mainPlayerChampionId: {type: Number},
-    mainPalyerPuuid: {type: String},
+    mainPlayerPuuid: {type: String},
     mainPlayerTier: {type: String},
     mainPlayerRank: {type: String},
     mainPlayerLeaguePoints: {type: Number},

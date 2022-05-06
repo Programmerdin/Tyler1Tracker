@@ -27,7 +27,7 @@ app.get("/", (req, res)=>{
 })
 
 //Riot API Key
-const API_KEY = "RGAPI-6827324e-7f70-42dd-8886-6ba601ab66a8";
+const API_KEY = "RGAPI-17313df0-c5f7-4085-aa0b-cd1465ae5db0";
 
 const PLATFORM_ROUTING_VALUE_NA = "https://na1.api.riotgames.com";
 const PLATFORM_ROUTING_VALUE_KR = "https://kr.api.riotgames.com";
