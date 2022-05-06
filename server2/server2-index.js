@@ -795,7 +795,7 @@ async function getMatchInfoFromLiveGame(SummonerId){
                         let dataObject = await MatchData.findOne({matchId: temporary_matchId})
                         
                             //if player is unranked .find() should return undefined
-                            if(temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5') == undefined){
+                            if(temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5') === undefined){
                                 dataObject.participants[i].tier = "Unranked"
                                 dataObject.participants[i].rank = "Unranked"
                                 dataObject.participants[i].leaguePoints = 0
@@ -803,6 +803,7 @@ async function getMatchInfoFromLiveGame(SummonerId){
                                   dataObject.mainPlayerTier = "Unranked"
                                   dataObject.mainPlayerRank = "Unranked"
                                   dataObject.mainPlayerLeaguePoints = 0
+                                  await dataObject.save();
                                 }
                                 await dataObject.save();
                             } else{
@@ -811,14 +812,15 @@ async function getMatchInfoFromLiveGame(SummonerId){
                                 dataObject.participants[i].leaguePoints = temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5').leaguePoints;
                                 dataObject.participants[i].wins = temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5').wins;
                                 dataObject.participants[i].losses = temporary_extracted_data.find(x=>x.queueType==='RANKED_SOLO_5x5').losses;
+                                await dataObject.save();
                                 if(dataObject.participants[i].summonerId === Summoner_Id_IN_USE){
                                   dataObject.mainPlayerTier = temporary_extracted_data.find(x=>queueType === "RANKED_SOLO_5x5").tier
                                   dataObject.mainPlayerRank = temporary_extracted_data.find(x=>queueType === "RANKED_SOLO_5x5").rank
                                   dataObject.mainPlayerLeaguePoints = temporary_extracted_data.find(x=>queueType === "RANKED_SOLO_5x5").leaguePoints
                                   dataObject.mainPlayerWins = temporary_extracted_data.find(x=>queueType === "RANKED_SOLO_5x5").wins
                                   dataObject.mainPlayerLosses = temporary_extracted_data.find(x=>queueType === "RANKED_SOLO_5x5").losses
+                                  await dataObject.save();
                                 }
-                                await dataObject.save();
                             }                           
                     }).catch(err=>err)
                 }
